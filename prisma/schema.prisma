@@ -43,7 +43,6 @@ model Room {
   token    String     @db.Text
   type     Int
   size     Int
-  SizeRule SizeRule   @relation(fields: [size], references: [size])
   RoomUser RoomUser[]
 
   @@index([size], name: "size")
@@ -65,11 +64,10 @@ model RoomUser {
 }
 
 model SizeRule {
-  id   Int    @id @default(autoincrement())
+  id   Int  @id @default(autoincrement())
   size Int
   role Int
-  Role Role   @relation(fields: [role], references: [id])
-  Room Room[]
+  Role Role @relation(fields: [role], references: [id])
 
   @@index([role], name: "role")
   @@index([size], name: "size")

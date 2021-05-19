@@ -43,6 +43,7 @@ model Room {
   token    String     @db.Text
   type     Int
   size     Int
+  state    Int        @default(0)
   RoomUser RoomUser[]
 
   @@index([size], name: "size")

@@ -8,8 +8,63 @@ datasource db {
 }
 
 model User {
-  id         Int    @id
-  first_name String @db.Text
-  last_name  String @db.Text
-  avatar_src String @db.Text
+  id                          Int        @id
+  first_name                  String     @db.Text
+  last_name                   String     @db.Text
+  avatar_src                  String     @db.Text
+  vk_access_token             String?    @db.Text
+  online                      Boolean    @default(false)
+  Friend_Friend_from_idToUser Friend[]   @relation("Friend_from_idToUser")
+  Friend_Friend_to_idToUser   Friend[]   @relation("Friend_to_idToUser")
+  RoomUser                    RoomUser[]
+}
+
+model Friend {
+  id                        Int  @id @default(autoincrement())
+  from_id                   Int
+  to_id                     Int
+  User_Friend_from_idToUser User @relation("Friend_from_idToUser", fields: [from_id], references: [id])
+  User_Friend_to_idToUser   User @relation("Friend_to_idToUser", fields: [to_id], references: [id])
+
+  @@index([from_id], name: "from_id")
+  @@index([to_id], name: "to_id")
+}
+
+model Role {
+  id       Int        @id @default(autoincrement())
+  name     String     @db.Text
+  rules    Json
+  RoomUser RoomUser[]
+  SizeRule SizeRule[]
+}
+
+model Room {
+  id       Int        @id @default(autoincrement())
+  token    String     @db.Text
+  type     Int
+  RoomUser RoomUser[]
+}
+
+model RoomUser {
+  record_id Int     @id @default(autoincrement())
+  room_id   Int
+  user_id   Int
+  role      Int
+  isDead    Boolean @default(false)
+  Role      Role    @relation(fields: [role], references: [id])
+  Room      Room    @relation(fields: [room_id], references: [id])
+  User      User    @relation(fields: [user_id], references: [id])
+
+  @@index([role], name: "role")
+  @@index([room_id], name: "room_id")
+  @@index([user_id], name: "user_id")
+}
+
+model SizeRule {
+  id   Int  @id @default(autoincrement())
+  size Int
+  role Int
+  Role Role @relation(fields: [role], references: [id])
+
+  @@index([role], name: "role")
 }

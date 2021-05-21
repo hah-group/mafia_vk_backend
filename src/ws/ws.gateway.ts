@@ -28,4 +28,10 @@ export class WsGateway {
       status: true,
     };
   }
+
+  @OnEvent(RoomInternalEventEnum.CREATE)
+  handleRoomCreate(room: Room) {
+    console.log(room);
+    this.server.to('events').emit('room/create', room);
+  }
 }

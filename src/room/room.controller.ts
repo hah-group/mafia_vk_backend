@@ -5,15 +5,22 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RoomAvailability } from './enum/room-availability';
 import { RoomStateEnum } from './enum/room-state.enum';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { RoomInternalEventEnum } from './enum/room-internal-event.enum';
 
 @UseGuards(JwtAuthGuard)
 @Controller('room')
 export class RoomController {
-  constructor(private roomService: RoomService) {}
+  constructor(
+    private roomService: RoomService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   @Post('create')
   async create(@Body() createRoomDto: CreateRoomDto): Promise<Room> {
-    return this.roomService.createRoom(createRoomDto);
+    const room = await this.roomService.createRoom(createRoomDto);
+    this.eventEmitter.emit(RoomInternalEventEnum.CREATE, room);
+    return room;
   }
 
   @Get('list')

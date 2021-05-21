@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { RoomModule } from './room/room.module';
 import { WsModule } from './ws/ws.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -19,6 +20,9 @@ import { WsModule } from './ws/ws.module';
     UserModule,
     RoomModule,
     WsModule,
+    EventEmitterModule.forRoot({
+      delimiter: '/',
+    }),
   ],
 })
 export class AppModule {}

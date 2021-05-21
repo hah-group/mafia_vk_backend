@@ -26,9 +26,9 @@ import { RoomEventEnum } from '../room/enum/room-event.enum';
   pingInterval: 5000,
 })
 export class WsGateway {
-  constructor(private wsService: WsService) {}
-
   @WebSocketServer() server: Server;
+
+  constructor(private wsService: WsService) {}
 
   @UseGuards(JwtWsAuthGuard)
   @SubscribeMessage('auth/token')

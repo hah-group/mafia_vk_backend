@@ -10,6 +10,10 @@ import { RoomAvailability } from './enum/room-availability';
 export class RoomService {
   constructor(private prisma: PrismaService) {}
 
+  async room(params: { where: Prisma.RoomWhereUniqueInput }): Promise<Room> {
+    return this.prisma.room.findUnique(params);
+  }
+
   async rooms(params: { where: Prisma.RoomWhereInput }): Promise<Room[]> {
     return this.prisma.room.findMany(params);
   }

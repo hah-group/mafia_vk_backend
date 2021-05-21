@@ -5,6 +5,7 @@ import { VkIoModule } from './vk-io/vk-io.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { RoomModule } from './room/room.module';
+import { WsModule } from './ws/ws.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RoomModule } from './room/room.module';
     PrismaModule,
     UserModule,
     RoomModule,
+    WsModule,
   ],
 })
 export class AppModule {}

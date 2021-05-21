@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class AppAuthGuard implements CanActivate {
   constructor(private authService: AuthService) {}
+
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {

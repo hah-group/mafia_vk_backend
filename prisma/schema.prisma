@@ -45,9 +45,11 @@ model Room {
   size         Int
   state        Int        @default(0)
   availability Int        @default(0)
+  RoomType     RoomType   @relation(fields: [type], references: [id])
   RoomUser     RoomUser[]
 
   @@index([size], name: "size")
+  @@index([type], name: "type")
 }
 
 model RoomUser {
@@ -55,7 +57,7 @@ model RoomUser {
   room_id   Int
   user_id   Int
   role      Int
-  isDead    Boolean @default(false)
+  is_dead   Boolean @default(false)
   Role      Role    @relation(fields: [role], references: [id])
   Room      Room    @relation(fields: [room_id], references: [id])
   User      User    @relation(fields: [user_id], references: [id])
@@ -73,4 +75,18 @@ model SizeRule {
 
   @@index([role], name: "role")
   @@index([size], name: "size")
+}
+
+model RoomType {
+  id                        Int    @id @default(autoincrement())
+  name                      String @db.Text
+  description               String @db.Text
+  size                      Int    @db.TinyInt
+  showdown_role_after_death Int    @db.TinyInt
+  speech_after_quit         Int    @db.TinyInt
+  votiting_strategy         Int    @db.TinyInt
+  approve_speech            Int    @db.TinyInt
+  additional_roles          Int    @db.TinyInt
+  mafia_strategy            Int    @db.TinyInt
+  Room                      Room[]
 }

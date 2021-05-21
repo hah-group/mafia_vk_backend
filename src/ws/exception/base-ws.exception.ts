@@ -4,7 +4,7 @@ import { WsExceptionCodeEnum } from './ws-exception-code.enum';
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum';
 
 export class BaseWsException extends WsException {
-  private readonly code: WsExceptionCodeEnum;
+  private readonly code: WsExceptionCodeEnum | HttpStatus;
 
   constructor(message: string, code: WsExceptionCodeEnum | HttpStatus) {
     super(message);

@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { RoomModule } from './room/room.module';
 import { WsModule } from './ws/ws.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { RoomUserModule } from './room-user/room-user.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     EventEmitterModule.forRoot({
       delimiter: '/',
     }),
+    RoomUserModule,
   ],
 })
 export class AppModule {}

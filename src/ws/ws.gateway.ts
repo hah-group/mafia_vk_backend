@@ -44,7 +44,7 @@ export class WsGateway {
   async roomConnect(
     @ConnectedSocket() client: ExtendSocket,
   ): Promise<StatusResponseDto> {
-    await this.wsService.roomConnect(client.gameRoom);
+    await this.wsService.roomConnect(client);
 
     const roomId = `room#${client.gameRoom.id}#${client.gameRoom.token}`;
     client.join(roomId);

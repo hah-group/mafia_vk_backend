@@ -3,9 +3,10 @@ import { WsGateway } from './ws.gateway';
 import { JwtWsStrategy } from './guard/jwt-ws.strategy';
 import { UserModule } from '../user/user.module';
 import { WsService } from './ws.service';
+import { RoomUserModule } from '../room-user/room-user.module';
 
 @Module({
   providers: [WsGateway, JwtWsStrategy, WsService],
-  imports: [UserModule],
+  imports: [UserModule, RoomUserModule],
 })
 export class WsModule {}

@@ -1,1 +1,3 @@
-export class WsExceptionCodeEnum {}
+export enum WsExceptionCodeEnum {
+  ROOM_FULL = 1400,
+}

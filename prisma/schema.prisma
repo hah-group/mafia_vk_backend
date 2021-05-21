@@ -39,12 +39,13 @@ model Role {
 }
 
 model Room {
-  id       Int        @id @default(autoincrement())
-  token    String     @db.Text
-  type     Int
-  size     Int
-  state    Int        @default(0)
-  RoomUser RoomUser[]
+  id           Int        @id @default(autoincrement())
+  token        String     @db.Text
+  type         Int
+  size         Int
+  state        Int        @default(0)
+  availability Int        @default(0)
+  RoomUser     RoomUser[]
 
   @@index([size], name: "size")
 }

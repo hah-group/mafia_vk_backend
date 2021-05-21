@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as crypto from 'crypto';
-import { Room } from '@prisma/client';
+import { Prisma, Room } from '@prisma/client';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomStateEnum } from './enum/room-state.enum';
+import { RoomAvailability } from './enum/room-availability';
 
 @Injectable()
 export class RoomService {
   constructor(private prisma: PrismaService) {}
+
+  async rooms(params: { where: Prisma.RoomWhereInput }): Promise<Room[]> {
+    return this.prisma.room.findMany(params);
+  }
 
   async createRoom(createRoomDto: CreateRoomDto): Promise<Room> {
     const token = crypto.randomBytes(48);
@@ -17,6 +22,7 @@ export class RoomService {
         type: createRoomDto.type,
         size: createRoomDto.size,
         state: RoomStateEnum.CREATED,
+        availability: RoomAvailability.PUBLIC,
       },
     });
   }

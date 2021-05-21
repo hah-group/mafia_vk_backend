@@ -1,5 +1,5 @@
 export enum RoomTypeEnum {
-  CLASSIC,
   EXTEND,
+  CLASSIC,
   CUSTOM,
 }

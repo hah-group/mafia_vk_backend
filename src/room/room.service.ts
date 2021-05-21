@@ -19,10 +19,14 @@ export class RoomService {
     return this.prisma.room.create({
       data: {
         token: token.toString('base64'),
-        type: createRoomDto.type,
         size: createRoomDto.size,
         state: RoomStateEnum.CREATED,
         availability: RoomAvailability.PUBLIC,
+        RoomType: {
+          connect: {
+            id: createRoomDto.type,
+          },
+        },
       },
     });
   }

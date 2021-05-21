@@ -56,9 +56,9 @@ model RoomUser {
   record_id Int     @id @default(autoincrement())
   room_id   Int
   user_id   Int
-  role      Int
+  role      Int?
   is_dead   Boolean @default(false)
-  Role      Role    @relation(fields: [role], references: [id])
+  Role      Role?   @relation(fields: [role], references: [id])
   Room      Room    @relation(fields: [room_id], references: [id])
   User      User    @relation(fields: [user_id], references: [id])
 

@@ -44,10 +44,15 @@ export class RoomUserService {
     });
   }
 
-  async updateRoomUser(params: {
-    where: Prisma.RoomUserWhereUniqueInput;
-    data: Prisma.RoomUserUpdateInput;
-  }): Promise<RoomUser> {
+  async updateRoomUser<T extends Prisma.RoomUserUpdateArgs>(
+    params: Prisma.SelectSubset<T, Prisma.RoomUserUpdateArgs>,
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Promise<RoomUser>,
+      Promise<Prisma.RoomUserGetPayload<T, keyof T>>
+    >
+  > {
     return this.prisma.roomUser.update(params);
   }
 

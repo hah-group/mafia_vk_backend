@@ -26,7 +26,7 @@ export class RoomUserService {
         },
       },
       update: {
-        connection_status: connectionStatus,
+        status: connectionStatus,
       },
       create: {
         Room: {
@@ -39,7 +39,7 @@ export class RoomUserService {
             id: user.id,
           },
         },
-        connection_status: connectionStatus,
+        status: connectionStatus,
       },
     });
   }

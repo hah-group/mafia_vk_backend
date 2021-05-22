@@ -42,7 +42,7 @@ export class WsService {
         },
       },
       data: {
-        connection_status: ConnectionRoomUserStatusEnum.DISCONNECTED,
+        status: ConnectionRoomUserStatusEnum.DISCONNECTED,
       },
     });
   }

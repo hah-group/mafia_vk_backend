@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Room, RoomUser, User } from '@prisma/client';
-import { ConnectionRoomUserStatusEnum } from './enum/connection-room-user-status.enum';
+import { RoomUserStatusEnum } from './enum/room-user-status.enum';
 
 @Injectable()
 export class RoomUserService {
@@ -16,7 +16,7 @@ export class RoomUserService {
   async upsertRoomUser(
     room: Room,
     user: User,
-    connectionStatus: ConnectionRoomUserStatusEnum,
+    connectionStatus: RoomUserStatusEnum,
   ): Promise<RoomUser> {
     return this.prisma.roomUser.upsert({
       where: {

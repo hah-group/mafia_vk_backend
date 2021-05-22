@@ -21,4 +21,29 @@ export class WsService {
       ConnectionRoomUserStatusEnum.CONNECTED,
     );
   }
+
+  async clientDisconnect(socket: ExtendSocket): Promise<void> {
+    await this.roomUserService.deleteRoomUser({
+      where: {
+        room_user: {
+          room_id: socket.gameRoom.id,
+          user_id: socket.user.id,
+        },
+      },
+    });
+  }
+
+  async clientError(socket: ExtendSocket): Promise<void> {
+    await this.roomUserService.updateRoomUser({
+      where: {
+        room_user: {
+          room_id: socket.gameRoom.id,
+          user_id: socket.user.id,
+        },
+      },
+      data: {
+        connection_status: ConnectionRoomUserStatusEnum.DISCONNECTED,
+      },
+    });
+  }
 }

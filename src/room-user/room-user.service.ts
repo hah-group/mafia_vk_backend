@@ -43,4 +43,17 @@ export class RoomUserService {
       },
     });
   }
+
+  async updateRoomUser(params: {
+    where: Prisma.RoomUserWhereUniqueInput;
+    data: Prisma.RoomUserUpdateInput;
+  }): Promise<RoomUser> {
+    return this.prisma.roomUser.update(params);
+  }
+
+  async deleteRoomUser(params: {
+    where: Prisma.RoomUserWhereUniqueInput;
+  }): Promise<RoomUser> {
+    return this.prisma.roomUser.delete(params);
+  }
 }

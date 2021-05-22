@@ -18,6 +18,7 @@ import { RoomWsAuthGuard } from './guard/room-ws-auth.guard';
 import { ExtendSocket } from './type/extend-socket';
 import { WsService } from './ws.service';
 import { RoomEventEnum } from '../room/enum/room-event.enum';
+import { SocketDisconnectReasonEnum } from './socket-disconnect-reason.enum';
 
 @UseFilters(new HttpWsFilter())
 @WebSocketGateway({
@@ -61,5 +62,26 @@ export class WsGateway {
   @OnEvent(RoomInternalEventEnum.CREATE)
   handleRoomCreate(room: Room) {
     this.server.to('events').emit('room/create', room);
+  }
+
+  handleConnection(client: ExtendSocket) {
+    client.on('disconnect', (reason) => this.disconnect(client, reason));
+  }
+
+  async disconnect(client: ExtendSocket, reason: string) {
+    if (!client.gameRoom || !client.user) return;
+
+    switch (reason) {
+      case SocketDisconnectReasonEnum.SERVER_NAMESPACE_DISCONNECT:
+      case SocketDisconnectReasonEnum.CLIENT_NAMESPACE_DISCONNECT:
+        await this.wsService.clientDisconnect(client);
+        break;
+      default:
+        await this.wsService.clientError(client);
+        const roomId = `room#${client.gameRoom.id}#${client.gameRoom.token}`;
+        this.server.to(roomId).emit(RoomEventEnum.USER_ERROR, {
+          id: client.user.id,
+        });
+    }
   }
 }

@@ -53,15 +53,15 @@ model Room {
 }
 
 model RoomUser {
-  record_id         Int     @id @default(autoincrement())
-  room_id           Int
-  user_id           Int
-  role              Int?
-  is_dead           Boolean @default(false)
-  connection_status Int     @db.TinyInt
-  Role              Role?   @relation(fields: [role], references: [id])
-  Room              Room    @relation(fields: [room_id], references: [id])
-  User              User    @relation(fields: [user_id], references: [id])
+  record_id Int     @id @default(autoincrement())
+  room_id   Int
+  user_id   Int
+  role      Int?
+  is_dead   Boolean @default(false)
+  status    Int     @db.TinyInt
+  Role      Role?   @relation(fields: [role], references: [id])
+  Room      Room    @relation(fields: [room_id], references: [id])
+  User      User    @relation(fields: [user_id], references: [id])
 
   @@unique([room_id, user_id], name: "room_user")
   @@index([role], name: "role")

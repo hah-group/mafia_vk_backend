@@ -7,6 +7,7 @@ import { Room } from '@prisma/client';
 import { PublicRoomType } from './type/public-room.type';
 import { RoomService } from '../../room/room.service';
 import { PublicRoomUserType } from './type/public-room-user.type';
+import { GatewayRoomUserAlreadyConnectedException } from './exception/gateway-room-user-already-connected.exception';
 
 @Injectable()
 export class RoomGatewayService {
@@ -15,12 +16,26 @@ export class RoomGatewayService {
     private roomService: RoomService,
   ) {}
 
+  private async userAlreadyConnected(client: ExtendSocket): Promise<boolean> {
+    const roomUser = await this.roomUserService.findUnique({
+      where: {
+        room_user: {
+          room_id: client.room.id,
+          user_id: client.user.id,
+        },
+      },
+    });
+
+    return roomUser && roomUser.status === RoomUserStatusEnum.CONNECTED;
+  }
+
   async connect(client: ExtendSocket): Promise<PublicRoomUserType> {
     const playerCount = await this.roomUserService.count({
       room_id: client.room.id,
     });
 
-    ///TODO Implement double connections
+    if (await this.userAlreadyConnected(client))
+      throw new GatewayRoomUserAlreadyConnectedException();
 
     if (playerCount >= client.room.size) throw new GatewayRoomFullException();
 

@@ -6,6 +6,18 @@ import { Prisma, RoomUser } from '@prisma/client';
 export class RoomUserService {
   constructor(private prisma: PrismaService) {}
 
+  async findUnique<T extends Prisma.RoomUserFindUniqueArgs>(
+    params: Prisma.SelectSubset<T, Prisma.RoomUserFindUniqueArgs>,
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Promise<RoomUser>,
+      Promise<Prisma.RoomUserGetPayload<T, keyof T>>
+    >
+  > {
+    return this.prisma.roomUser.findUnique(params);
+  }
+
   async count(where: Prisma.RoomUserWhereInput): Promise<number> {
     return this.prisma.roomUser.count({
       where: where,

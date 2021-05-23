@@ -73,22 +73,14 @@ export class RoomGateway {
     };
   }
 
-  /*handleConnection(client: ExtendSocket) {
-    client.on('disconnect', (reason) => this.terminate(client, reason));
+  async handleDisconnect(client: ExtendSocket) {
+    if (!client.user || !client.room) return;
+
+    const roomUser = await this.roomGatewayService.userTerminated(client);
+    if (!roomUser) return;
+
+    this.server.to(RoomIdUtil(client.room)).emit('room/terminateUser', {
+      User: roomUser,
+    });
   }
-
-  async terminate(client: ExtendSocket, reason: string) {
-    if (!client.room || !client.user) return;
-
-    switch (reason) {
-      case SocketDisconnectReasonEnum.SERVER_NAMESPACE_DISCONNECT:
-      case SocketDisconnectReasonEnum.CLIENT_NAMESPACE_DISCONNECT:
-        await this.wsService.clientDisconnect(client);
-        break;
-      default:
-        await this.wsService.clientError(client);
-    }
-
-    await this.roomSync(client);
-  }*/
 }

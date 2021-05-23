@@ -3,7 +3,7 @@ import { ExtendSocket } from '../type/extend-socket';
 import { GatewayRoomFullException } from './exception/gateway-room-full.exception';
 import { RoomUserStatusEnum } from '../../room-user/enum/room-user-status.enum';
 import { RoomUserService } from '../../room-user/room-user.service';
-import { Room } from '@prisma/client';
+import { Prisma, Room, RoomUser } from '@prisma/client';
 import { PublicRoomType } from './type/public-room.type';
 import { RoomService } from '../../room/room.service';
 import { PublicRoomUserType } from './type/public-room-user.type';
@@ -16,8 +16,8 @@ export class RoomGatewayService {
     private roomService: RoomService,
   ) {}
 
-  private async userAlreadyConnected(client: ExtendSocket): Promise<boolean> {
-    const roomUser = await this.roomUserService.findUnique({
+  public async findRoomUser(client: ExtendSocket): Promise<RoomUser> {
+    return this.roomUserService.findUnique({
       where: {
         room_user: {
           room_id: client.room.id,
@@ -25,6 +25,10 @@ export class RoomGatewayService {
         },
       },
     });
+  }
+
+  private async userAlreadyConnected(client: ExtendSocket): Promise<boolean> {
+    const roomUser = await this.findRoomUser(client);
 
     return roomUser && roomUser.status === RoomUserStatusEnum.CONNECTED;
   }
@@ -99,6 +103,48 @@ export class RoomGatewayService {
           user_id: client.user.id,
         },
       },
+    });
+  }
+
+  async userTerminated(client: ExtendSocket): Promise<PublicRoomUserType> {
+    return this.updateRoomUserStatus(client, RoomUserStatusEnum.DISCONNECTED, {
+      select: {
+        is_dead: true,
+        status: true,
+        User: {
+          select: {
+            id: true,
+            first_name: true,
+            last_name: true,
+            avatar_src: true,
+          },
+        },
+      },
+    });
+  }
+
+  async updateRoomUserStatus<T extends Prisma.RoomUserArgs>(
+    client: ExtendSocket,
+    status: RoomUserStatusEnum,
+    params?: Prisma.SelectSubset<T, Prisma.RoomUserArgs>,
+  ): Promise<
+    Prisma.CheckSelect<
+      T,
+      Promise<RoomUser>,
+      Promise<Prisma.RoomUserGetPayload<T, keyof T>>
+    >
+  > {
+    return this.roomUserService.update({
+      where: {
+        room_user: {
+          room_id: client.room.id,
+          user_id: client.user.id,
+        },
+      },
+      data: {
+        status: status,
+      },
+      ...params,
     });
   }
 

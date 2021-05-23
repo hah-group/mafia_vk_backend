@@ -49,7 +49,6 @@ export class PublicGateway {
 
   @OnEvent(RoomInternalEventEnum.CREATE)
   handleRoomCreate(room: Room) {
-    ///TODO Override all events
     this.server.to('events').emit('public/event/room/create', room);
   }
 }

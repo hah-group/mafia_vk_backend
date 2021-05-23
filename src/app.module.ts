@@ -5,9 +5,9 @@ import { VkIoModule } from './vk-io/vk-io.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { RoomModule } from './room/room.module';
-import { WsModule } from './ws/ws.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { RoomUserModule } from './room-user/room-user.module';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
@@ -20,11 +20,11 @@ import { RoomUserModule } from './room-user/room-user.module';
     PrismaModule,
     UserModule,
     RoomModule,
-    WsModule,
     EventEmitterModule.forRoot({
       delimiter: '/',
     }),
     RoomUserModule,
+    GatewayModule,
   ],
 })
 export class AppModule {}

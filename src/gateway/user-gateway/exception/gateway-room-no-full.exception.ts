@@ -1,5 +1,5 @@
-import { BaseGatewayException } from './base-gateway.exception';
-import { GatewayExceptionCodeEnum } from './gateway-exception-code.enum';
+import { BaseGatewayException } from '../../exception/base-gateway.exception';
+import { GatewayExceptionCodeEnum } from '../../exception/gateway-exception-code.enum';
 
 export class GatewayRoomNoFullException extends BaseGatewayException {
   constructor() {

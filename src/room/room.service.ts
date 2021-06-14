@@ -34,7 +34,7 @@ export class RoomService {
     return this.prisma.room.findMany(params);
   }
 
-  async createRoom(createRoomDto: CreateRoomDto): Promise<Room> {
+  async createRoom(createRoomDto: CreateRoomDto): Promise<PublicRoomType> {
     const token = crypto.randomBytes(48);
     return this.prisma.room.create({
       data: {
@@ -48,6 +48,17 @@ export class RoomService {
           },
         },
       },
+      include: PublicRoomTypeInclude,
+    });
+  }
+
+  async update(room: Room): Promise<Room> {
+    const { id, ...data } = room;
+    return this.prisma.room.update({
+      where: {
+        id: id,
+      },
+      data: data,
     });
   }
 }

@@ -1,5 +1,6 @@
-import { Room } from '@prisma/client';
+import { PublicRoomType } from '../../room-gateway/type/public-room.type';
 
 export interface PublicGatewayResponseEventInterface {
-  'public/event/room/create': (room: Room) => void;
+  'public/event/room/create': (room: PublicRoomType) => void;
+  'public/event/room/update': (room: PublicRoomType) => void;
 }

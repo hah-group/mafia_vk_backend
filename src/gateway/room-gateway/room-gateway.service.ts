@@ -8,6 +8,7 @@ import { PublicRoomType } from './type/public-room.type';
 import { RoomService } from '../../room/room.service';
 import { PublicRoomUserType } from './type/public-room-user.type';
 import { GatewayRoomUserAlreadyConnectedException } from './exception/gateway-room-user-already-connected.exception';
+import { PublicRoomTypeInclude } from '../../room/public-room-type.include';
 
 @Injectable()
 export class RoomGatewayService {
@@ -153,23 +154,7 @@ export class RoomGatewayService {
       where: {
         id: room.id,
       },
-      include: {
-        RoomType: true,
-        RoomUser: {
-          select: {
-            is_dead: true,
-            status: true,
-            User: {
-              select: {
-                id: true,
-                first_name: true,
-                last_name: true,
-                avatar_src: true,
-              },
-            },
-          },
-        },
-      },
+      include: PublicRoomTypeInclude,
     });
   }
 }

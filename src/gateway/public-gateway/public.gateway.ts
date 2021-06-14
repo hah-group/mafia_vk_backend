@@ -48,7 +48,7 @@ export class PublicGateway {
   }
 
   @OnEvent(RoomInternalEventEnum.CREATE)
-  handleRoomCreate(room: Room) {
+  handleRoomCreate(room: PublicRoomType) {
     this.server.to('events').emit('public/event/room/create', room);
   }
 }

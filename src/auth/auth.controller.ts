@@ -14,7 +14,6 @@ export class AuthController {
     const user = await this.authService.auth(query.vk_user_id);
     return {
       access_token: this.authService.createToken(user),
-      User: user,
     };
   }
 }

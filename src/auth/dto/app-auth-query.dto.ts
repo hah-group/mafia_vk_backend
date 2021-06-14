@@ -1,4 +1,4 @@
-import { Contains, IsNumberString } from 'class-validator';
+import { Contains, IsNumberString, IsString } from 'class-validator';
 
 export class AppAuthQueryDto {
   @IsNumberString()
@@ -7,4 +7,7 @@ export class AppAuthQueryDto {
 
   @IsNumberString()
   vk_user_id: string;
+
+  @IsString()
+  sign: string;
 }

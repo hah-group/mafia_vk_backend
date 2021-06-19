@@ -8,6 +8,8 @@ import { RoomModule } from './room/room.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { RoomUserModule } from './room-user/room-user.module';
 import { GatewayModule } from './gateway/gateway.module';
+import { SizeRuleModule } from './size-rule/size-rule.module';
+import { RoomTypeModule } from './room-type/room-type.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { GatewayModule } from './gateway/gateway.module';
     }),
     RoomUserModule,
     GatewayModule,
+    SizeRuleModule,
+    RoomTypeModule,
   ],
 })
 export class AppModule {}

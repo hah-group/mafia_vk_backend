@@ -5,6 +5,8 @@ import { Prisma, Room } from '@prisma/client';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomStateEnum } from './enum/room-state.enum';
 import { RoomAvailability } from './enum/room-availability';
+import { PublicRoomType } from '../gateway/room-gateway/type/public-room.type';
+import { PublicRoomTypeInclude } from './public-room-type.include';
 
 @Injectable()
 export class RoomService {

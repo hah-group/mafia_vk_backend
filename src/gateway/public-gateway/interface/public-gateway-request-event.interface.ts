@@ -1,4 +1,4 @@
 export interface PublicGatewayRequestEventInterface {
-  'public/subscribe': () => void;
-  'public/unsubscribe': () => void;
+  PUBLIC_SUBSCRIBE: () => void;
+  PUBLIC_UNSUBSCRIBE: () => void;
 }

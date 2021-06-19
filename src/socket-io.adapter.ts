@@ -47,6 +47,7 @@ export class SocketIoAdapter extends AbstractWsAdapter {
         },
         // Allow 1MB of data per request.
         maxHttpBufferSize: 1e6,
+        ...options,
       });
       instrument(s, {
         auth: false,

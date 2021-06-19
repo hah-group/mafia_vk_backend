@@ -9,7 +9,9 @@ async function bootstrap() {
   });
   app.useWebSocketAdapter(new SocketIoAdapter(app, [/\w*/]));
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  app.setGlobalPrefix('api');
+
+  await app.listen(3001);
 }
 
 bootstrap();

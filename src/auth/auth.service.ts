@@ -5,6 +5,7 @@ import { UsersUserFull } from 'vk-io/lib/api/schemas/objects';
 import { UserService } from '../user/user.service';
 import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
+import { JwtBodyDto } from './dto/jwt-body.dto';
 
 @Injectable()
 export class AuthService {
@@ -60,7 +61,7 @@ export class AuthService {
   }
 
   createToken(user: User): string {
-    const payload = { sub: user.id, name: user.first_name };
+    const payload: JwtBodyDto = { sub: user.id, name: user.first_name };
     return this.jwtService.sign(payload);
   }
 }

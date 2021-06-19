@@ -15,6 +15,6 @@ export class HttpGatewayFilter implements ExceptionFilter {
       exception.getStatus(),
     ).getError();
     const socket = host.switchToWs().getClient<Socket>();
-    socket.emit('exception', error);
+    socket.emit('EXCEPTION', error);
   }
 }

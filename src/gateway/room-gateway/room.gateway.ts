@@ -9,7 +9,6 @@ import { ExtendSocket } from '../type/extend-socket';
 import { StatusResponseDto } from '../dto/status-response.dto';
 import { RoomGatewayService } from './room-gateway.service';
 import { UseGuards } from '@nestjs/common';
-import { JwtGatewayAuthGuard } from '../guard/jwt-gateway-auth.guard';
 import { RoomWsAuthGuard } from '../guard/room-gateway-auth.guard';
 import { Server } from 'socket.io';
 import { RoomGatewayRequestEventInterface } from './interface/room-gateway-request-event.interface';
@@ -54,13 +53,13 @@ export class RoomGateway {
     };
   }
 
-  @UseGuards(JwtGatewayAuthGuard, RoomWsAuthGuard)
+  @UseGuards(AuthUserGatewayGuard, RoomWsAuthGuard)
   @SubscribeMessage('ROOM_DISCONNECT')
   async disconnect(
     @ConnectedSocket() client: ExtendSocket,
   ): Promise<StatusResponseDto> {
     const roomId = RoomIdUtil(client.room);
-    const isSubscribe = Object.keys(client.rooms).indexOf(roomId) > -1;
+    const isSubscribe = client.rooms.has(roomId);
     if (!isSubscribe) {
       return {
         status: isSubscribe,

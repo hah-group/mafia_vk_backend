@@ -27,21 +27,26 @@ export class RoomGatewayService {
     });
   }
 
-  private async userAlreadyConnected(client: ExtendSocket): Promise<boolean> {
-    const roomUser = await this.findRoomUser(client);
-
-    return roomUser && roomUser.status === RoomUserStatusEnum.CONNECTED;
-  }
-
-  async connect(client: ExtendSocket): Promise<void> {
+  private async userConnectAllowed(client: ExtendSocket): Promise<boolean> {
     const playerCount = await this.roomUserService.count({
       room_id: client.room.id,
     });
 
-    if (await this.userAlreadyConnected(client))
+    const roomUser = await this.findRoomUser(client);
+
+    if (roomUser && roomUser.status === RoomUserStatusEnum.CONNECTED)
       throw new GatewayRoomUserAlreadyConnectedException();
 
+    if (roomUser && roomUser.status >= RoomUserStatusEnum.DISCONNECTED)
+      return true;
+
     if (playerCount >= client.room.size) throw new GatewayRoomFullException();
+
+    return true;
+  }
+
+  async connect(client: ExtendSocket): Promise<void> {
+    await this.userConnectAllowed(client);
 
     await this.roomUserService.upsert({
       where: {

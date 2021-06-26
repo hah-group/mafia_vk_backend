@@ -1,4 +1,4 @@
 export interface RoomGatewayRequestEventInterface {
-  'room/connect': () => void;
-  'room/disconnect': () => void;
+  ROOM_CONNECT: () => void;
+  ROOM_DISCONNECT: () => void;
 }

@@ -1,7 +1,5 @@
-import { UserRoomUpdateDto } from '../dto/user-room-update.dto';
+import { PublicRoomType } from '../type/public-room.type';
 
 export interface RoomGatewayResponseEventInterface {
-  'room/connectUser': (roomUser: UserRoomUpdateDto) => void;
-  'room/terminateUser': (roomUser: UserRoomUpdateDto) => void;
-  'room/disconnectUser': (roomUser: UserRoomUpdateDto) => void;
+  ROOM_UPDATE: (roomUser: PublicRoomType) => void;
 }

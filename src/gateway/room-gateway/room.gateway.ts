@@ -16,6 +16,10 @@ import { RoomGatewayRequestEventInterface } from './interface/room-gateway-reque
 import { RoomGatewayResponseEventInterface } from './interface/room-gateway-response-event.interface';
 import { ConnectRoomResponseDto } from './dto/connect-room-response.dto';
 import { RoomIdUtil } from './room-id.util';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { RoomInternalEventEnum } from '../../room/enum/room-internal-event.enum';
+import { AuthUserGatewayGuard } from '../auth-gateway/auth-user-gateway.guard';
+import { PublicRoomType } from './type/public-room.type';
 
 @WebSocketGateway(GATEWAY_SETTINGS)
 export class RoomGateway {
@@ -24,21 +28,22 @@ export class RoomGateway {
     RoomGatewayResponseEventInterface
   >;
 
-  constructor(private roomGatewayService: RoomGatewayService) {}
+  constructor(
+    private roomGatewayService: RoomGatewayService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
-  @UseGuards(JwtGatewayAuthGuard, RoomWsAuthGuard)
-  @SubscribeMessage('room/connect')
+  @UseGuards(AuthUserGatewayGuard, RoomWsAuthGuard)
+  @SubscribeMessage('ROOM_CONNECT')
   async connect(
     @ConnectedSocket() client: ExtendSocket,
   ): Promise<ConnectRoomResponseDto> {
-    const roomUser = await this.roomGatewayService.connect(client);
+    await this.roomGatewayService.connect(client);
+
     const roomPublic = await this.roomGatewayService.publicData(client.room);
+    this.eventEmitter.emit(RoomInternalEventEnum.UPDATE, roomPublic);
 
     const roomId = RoomIdUtil(client.room);
-    this.server.to(roomId).emit('room/connectUser', {
-      User: roomUser,
-    });
-
     client.join(roomId);
 
     return {
@@ -50,7 +55,7 @@ export class RoomGateway {
   }
 
   @UseGuards(JwtGatewayAuthGuard, RoomWsAuthGuard)
-  @SubscribeMessage('room/disconnect')
+  @SubscribeMessage('ROOM_DISCONNECT')
   async disconnect(
     @ConnectedSocket() client: ExtendSocket,
   ): Promise<StatusResponseDto> {
@@ -61,12 +66,11 @@ export class RoomGateway {
         status: isSubscribe,
       };
     }
-
     client.leave(roomId);
-    const roomUser = await this.roomGatewayService.disconnect(client);
-    this.server.to(roomId).emit('room/disconnectUser', {
-      User: roomUser,
-    });
+    await this.roomGatewayService.disconnect(client);
+
+    const roomPublic = await this.roomGatewayService.publicData(client.room);
+    this.eventEmitter.emit(RoomInternalEventEnum.UPDATE, roomPublic);
 
     return {
       status: isSubscribe,
@@ -76,11 +80,15 @@ export class RoomGateway {
   async handleDisconnect(client: ExtendSocket) {
     if (!client.user || !client.room) return;
 
-    const roomUser = await this.roomGatewayService.userTerminated(client);
-    if (!roomUser) return;
+    await this.roomGatewayService.userTerminated(client);
 
-    this.server.to(RoomIdUtil(client.room)).emit('room/terminateUser', {
-      User: roomUser,
-    });
+    const roomPublic = await this.roomGatewayService.publicData(client.room);
+    this.eventEmitter.emit(RoomInternalEventEnum.UPDATE, roomPublic);
+  }
+
+  @OnEvent(RoomInternalEventEnum.UPDATE)
+  onRoomUpdate(room: PublicRoomType) {
+    const roomId = RoomIdUtil(room);
+    this.server.to(roomId).emit('ROOM_UPDATE', room);
   }
 }

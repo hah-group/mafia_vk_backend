@@ -6,7 +6,6 @@ import { RoomUserService } from '../../room-user/room-user.service';
 import { Prisma, Room, RoomUser } from '@prisma/client';
 import { PublicRoomType } from './type/public-room.type';
 import { RoomService } from '../../room/room.service';
-import { PublicRoomUserType } from './type/public-room-user.type';
 import { GatewayRoomUserAlreadyConnectedException } from './exception/gateway-room-user-already-connected.exception';
 import { PublicRoomTypeInclude } from '../../room/public-room-type.include';
 
@@ -34,7 +33,7 @@ export class RoomGatewayService {
     return roomUser && roomUser.status === RoomUserStatusEnum.CONNECTED;
   }
 
-  async connect(client: ExtendSocket): Promise<PublicRoomUserType> {
+  async connect(client: ExtendSocket): Promise<void> {
     const playerCount = await this.roomUserService.count({
       room_id: client.room.id,
     });
@@ -44,20 +43,7 @@ export class RoomGatewayService {
 
     if (playerCount >= client.room.size) throw new GatewayRoomFullException();
 
-    ///TODO Что то с этим сделать
-    return this.roomUserService.upsert({
-      select: {
-        is_dead: true,
-        status: true,
-        User: {
-          select: {
-            id: true,
-            first_name: true,
-            last_name: true,
-            avatar_src: true,
-          },
-        },
-      },
+    await this.roomUserService.upsert({
       where: {
         room_user: {
           room_id: client.room.id,
@@ -83,21 +69,8 @@ export class RoomGatewayService {
     });
   }
 
-  async disconnect(client: ExtendSocket): Promise<PublicRoomUserType> {
-    ///TODO Валидация отключения
-    return this.roomUserService.delete({
-      select: {
-        is_dead: true,
-        status: true,
-        User: {
-          select: {
-            id: true,
-            first_name: true,
-            last_name: true,
-            avatar_src: true,
-          },
-        },
-      },
+  async disconnect(client: ExtendSocket): Promise<void> {
+    await this.roomUserService.delete({
       where: {
         room_user: {
           room_id: client.room.id,
@@ -107,21 +80,8 @@ export class RoomGatewayService {
     });
   }
 
-  async userTerminated(client: ExtendSocket): Promise<PublicRoomUserType> {
-    return this.updateRoomUserStatus(client, RoomUserStatusEnum.DISCONNECTED, {
-      select: {
-        is_dead: true,
-        status: true,
-        User: {
-          select: {
-            id: true,
-            first_name: true,
-            last_name: true,
-            avatar_src: true,
-          },
-        },
-      },
-    });
+  async userTerminated(client: ExtendSocket): Promise<void> {
+    await this.updateRoomUserStatus(client, RoomUserStatusEnum.DISCONNECTED);
   }
 
   async updateRoomUserStatus<T extends Prisma.RoomUserArgs>(

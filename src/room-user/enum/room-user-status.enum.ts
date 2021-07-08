@@ -3,4 +3,5 @@ export enum RoomUserStatusEnum {
   DISCONNECTED,
   WALK_AWAY,
   READY,
+  IN_GAME,
 }

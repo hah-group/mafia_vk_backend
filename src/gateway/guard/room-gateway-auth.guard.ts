@@ -9,7 +9,15 @@ export class RoomWsAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const client = context.switchToWs().getClient<RoomSocket>();
-    if (client.room) return true;
+    if (client.room) {
+      const room = await this.roomService.room({
+        where: {
+          id: client.room.id,
+        },
+      });
+      client.room = room;
+      return true;
+    }
 
     const data = context.switchToWs().getData<ConnectRoomRequestDto>();
 

@@ -1,0 +1,14 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: Int!
+  first_name: String
+  last_name: String
+  avatar_src: String
+}
+
+type Query {
+  user(id: Int!): User!
+}

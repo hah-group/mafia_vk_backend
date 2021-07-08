@@ -48,6 +48,12 @@ export class RoomUserService {
     return this.prisma.roomUser.update(params);
   }
 
+  async updateMany<T extends Prisma.RoomUserUpdateManyArgs>(
+    params: Prisma.SelectSubset<T, Prisma.RoomUserUpdateManyArgs>,
+  ): Promise<Prisma.BatchPayload> {
+    return this.prisma.roomUser.updateMany(params);
+  }
+
   async delete<T extends Prisma.RoomUserDeleteArgs>(
     params: Prisma.SelectSubset<T, Prisma.RoomUserDeleteArgs>,
   ): Promise<

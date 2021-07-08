@@ -1,3 +1,3 @@
 export interface UserGatewayRequestEventInterface {
-  'user/ready': () => void;
+  USER_READY: () => void;
 }

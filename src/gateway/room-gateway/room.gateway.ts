@@ -19,6 +19,7 @@ import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { RoomInternalEventEnum } from '../../room/enum/room-internal-event.enum';
 import { AuthUserGatewayGuard } from '../auth-gateway/auth-user-gateway.guard';
 import { PublicRoomType } from './type/public-room.type';
+import { UserGatewayInternalEventEnum } from '../user-gateway/user-gateway-internal-event.enum';
 
 @WebSocketGateway(GATEWAY_SETTINGS)
 export class RoomGateway {
@@ -40,7 +41,10 @@ export class RoomGateway {
     await this.roomGatewayService.connect(client);
 
     const roomPublic = await this.roomGatewayService.publicData(client.room);
-    this.eventEmitter.emit(RoomInternalEventEnum.UPDATE, roomPublic);
+    this.eventEmitter.emit(
+      UserGatewayInternalEventEnum.USER_CHANGE,
+      roomPublic,
+    );
 
     const roomId = RoomIdUtil(client.room);
     client.join(roomId);
@@ -69,7 +73,10 @@ export class RoomGateway {
     await this.roomGatewayService.disconnect(client);
 
     const roomPublic = await this.roomGatewayService.publicData(client.room);
-    this.eventEmitter.emit(RoomInternalEventEnum.UPDATE, roomPublic);
+    this.eventEmitter.emit(
+      UserGatewayInternalEventEnum.USER_CHANGE,
+      roomPublic,
+    );
 
     return {
       status: isSubscribe,
@@ -82,7 +89,10 @@ export class RoomGateway {
     await this.roomGatewayService.userTerminated(client);
 
     const roomPublic = await this.roomGatewayService.publicData(client.room);
-    this.eventEmitter.emit(RoomInternalEventEnum.UPDATE, roomPublic);
+    this.eventEmitter.emit(
+      UserGatewayInternalEventEnum.USER_CHANGE,
+      roomPublic,
+    );
   }
 
   @OnEvent(RoomInternalEventEnum.UPDATE)

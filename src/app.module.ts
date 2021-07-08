@@ -10,6 +10,9 @@ import { RoomUserModule } from './room-user/room-user.module';
 import { GatewayModule } from './gateway/gateway.module';
 import { SizeRuleModule } from './size-rule/size-rule.module';
 import { RoomTypeModule } from './room-type/room-type.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { GameEngineModule } from './game-engine/game-engine.module';
+import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   imports: [
@@ -29,6 +32,12 @@ import { RoomTypeModule } from './room-type/room-type.module';
     GatewayModule,
     SizeRuleModule,
     RoomTypeModule,
+    ScheduleModule.forRoot(),
+    GameEngineModule,
+    GraphQLModule.forRoot({
+      playground: true,
+      autoSchemaFile: 'schema.gql',
+    }),
   ],
 })
 export class AppModule {}

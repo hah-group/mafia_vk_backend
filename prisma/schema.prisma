@@ -9,3 +9,10 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model User {
+  id          Int       @id
+  firstName   String
+  lastName    String
+  avatar      String    @db.Text
+}

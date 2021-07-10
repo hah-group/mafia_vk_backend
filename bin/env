@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -z ${MAF_ENV_LOCATION+x} ]; then
+  echo -e "\033[0;31mEnvironment variable file not defined!\033[0m"
+  exit
+else
+  if [ -f "$MAF_ENV_LOCATION" ]; then
+      source ./"${MAF_ENV_LOCATION}"
+  else
+      echo -e "\033[0;31mNo environment variables set!\033[0m"
+      exit
+  fi
+fi
+$*

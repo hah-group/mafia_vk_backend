@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = env("MAF_DATABASE_DRIVER")
+  provider = "mysql"
   url      = env("MAF_DATABASE_URL")
 }
 

@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "mysql"
-  url      = "mysql://root:Ehfjuehtxbr20@localhost:6033/mafia_app"
+  provider = env("MAF_DATABASE_DRIVER")
+  url      = env("MAF_DATABASE_URL")
 }
 
 generator client {

@@ -16,3 +16,9 @@ model User {
   lastName    String
   avatar      String    @db.Text
 }
+
+model Game {
+  id          Int       @id
+  stage       String
+  votingStage String
+}

@@ -9,9 +9,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Run Jest
-      uses: mattallty/jest-github-action@v1
+    - run: yarn install
+    - name: Run Tests
+      run: yarn jest --coverage --json --outputFile=/home/runner/work/_actions/mattallty/jest-github-action/v1/dist/jest.results.json
+    - uses: mattallty/jest-github-action@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        test-command: "yarn test"
+        test-command: 'echo done'

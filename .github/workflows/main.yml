@@ -6,13 +6,15 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    continue-on-error: true
+    
     steps:
     - uses: actions/checkout@v1
     - run: yarn install
     - name: Run Tests
-      uses: mattallty/jest-github-action@v1
+      run: yarn jest --coverage --json --outputFile=/home/runner/work/_actions/mattallty/jest-github-action/v1/dist/jest.results.json
+    - uses: mattallty/jest-github-action@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        test-command: 'yarn jest --coverage --json --outputFile=/home/runner/work/_actions/mattallty/jest-github-action/v1/dist/jest.results.json'
+        test-command: 'echo Test end'

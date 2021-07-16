@@ -6,8 +6,15 @@ jobs:
   jest:
     runs-on: ubuntu-latest
     steps:
-      - uses: mattallty/jest-github-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
         with:
-          changes-only: true
+          node-version: '14.x'
+          
+      - run: yarn install
+      
+      - uses: mattallty/jest-github-action@v1.0.2
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with: 
+          test-command: 'yarn test'

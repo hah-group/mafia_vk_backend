@@ -1,0 +1,13 @@
+name: Code Testing
+on:
+  push:
+
+jobs:
+  jest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mattallty/jest-github-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          changes-only: tru

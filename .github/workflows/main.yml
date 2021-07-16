@@ -16,7 +16,7 @@ jobs:
         run: yarn install
         
       - name: Run test
-        run: jest --runInBand --forceExit --coverage --json --outputFile=/home/runner/work/_actions/mattallty/jest-github-action/v1/dist/jest.results.json
+        run: yarn test
 
       - name: Run test
         uses: mattallty/jest-github-action@v1
